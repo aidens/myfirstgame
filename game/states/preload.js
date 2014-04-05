@@ -13,6 +13,7 @@ Preload.prototype = {
     this.load.onLoadComplete.addOnce(this.onLoadComplete, this);
     this.load.setPreloadSprite(this.asset);
     this.load.image('ninjae', 'assets/gametitle.png');
+    this.load.spritesheet('player', 'assets/player.png', 32, 48);
 
   },
   create: function() {
