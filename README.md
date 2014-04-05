@@ -1,4 +1,4 @@
-myfirstgame
+NINJAE
 ===========
 
-first game created with the help of phaser
+first 2D game created with the help of phaser.js
