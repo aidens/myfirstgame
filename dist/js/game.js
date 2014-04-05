@@ -89,7 +89,6 @@ Menu.prototype = {
 module.exports = Menu;
 
 },{}],5:[function(require,module,exports){
-
   'use strict';
   function Play() {}
 
@@ -97,17 +96,33 @@ module.exports = Menu;
   var jumpTimer = 0;
   var cursors;
   var jump;
-  var layer;
+  var bg;
+  var platforms;
 
   Play.prototype = {
     create: function() {
 
+      //start Physics
+      this.game.physics.startSystem(Phaser.Physics.ARCADE);
 
-      //gravity
-      this.game.physics.arcade.gravity.y = 250;
+      //background 
+      bg = this.game.add.tileSprite(0, 0, 800, 600, 'bg');
+
+      //platforms
+      platforms = this.game.add.group();
+      platforms.enableBody = true;
+ 
+      // Here we create the ground.
+      var ground = platforms.create(200, this.game.world.height - 100, 'ground');
+
+      //  Scale it to fit the width of the game (the original sprite is 400x32 in size)
+      ground.scale.setTo(1,1);
+ 
+      //  This stops it from falling away when you jump on it
+      ground.body.immovable = true;
 
       //ninja
-      ninja = this.game.add.sprite(32, this.game.world.height - 150, 'player');
+      ninja = this.game.add.sprite(32, this.game.world.height - 160, 'player');
       this.game.physics.arcade.enable(ninja);
 
       ninja.body.bounce.y = 0.2;
@@ -122,6 +137,7 @@ module.exports = Menu;
       //controls ninja with keyboard
       cursors = this.game.input.keyboard.createCursorKeys();
       jump = this.game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
+
     },
 
     update: function() {
@@ -150,11 +166,19 @@ module.exports = Menu;
         ninja.frame = 1;
     }
     
-    //  Allow the player to jump if they are touching the ground.
-    if (cursors.up.isDown && ninja.body.touching.down)
+    //  Allow the ninja to jump if they are touching the ground.
+    if (jump.isDown && ninja.body.onFloor() && this.game.time.now > jumpTimer)
     {
-        ninja.body.velocity.y = -350;
+        ninja.body.velocity.y = -250;
     }
+
+    if (cursors.up.isDown || jump.isDown && ninja.body.touching.down)
+    {
+        ninja.body.velocity.y = -250;
+    }
+
+     //  Collide the player and the stars with the platforms
+    this.game.physics.arcade.collide(ninja, platforms);
 
     },
     clickListener: function() {
@@ -178,6 +202,9 @@ Preload.prototype = {
     this.load.onLoadComplete.addOnce(this.onLoadComplete, this);
     this.load.setPreloadSprite(this.asset);
     this.load.image('ninjae', 'assets/gametitle.png');
+    this.load.image('bg', 'assets/bg.png');
+    this.load.image('ledge', 'assets/Walkways/Walkway 1 E.png');
+    this.load.image('ground', 'assets/Walls/Wall 2 NW.png');
     this.load.spritesheet('player', 'assets/player.png', 32, 48);
 
   },
