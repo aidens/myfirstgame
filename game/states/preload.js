@@ -17,6 +17,7 @@ Preload.prototype = {
     this.load.image('ledge', 'assets/Walkways/Walkway 1 E.png');
     this.load.image('ground', 'assets/Walls/Wall 2 NW.png');
     this.load.spritesheet('player', 'assets/player.png', 32, 48);
+    this.load.spritesheet('enemy', 'assets/redenemy.png', 32, 48);
 
   },
   create: function() {

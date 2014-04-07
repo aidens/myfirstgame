@@ -2,6 +2,7 @@
   function Play() {}
 
   var ninja;
+  var enemies;
   var jumpTimer = 0;
   var cursors;
   var jump;
@@ -9,6 +10,38 @@
   var platforms;
 
   Play.prototype = {
+    createEnemies: function() {
+
+    for (var y = 0; y < 4; y++)
+    {
+      for (var x = 0; x < 10; x++)
+      {
+        var enemies = enemies.create(x * 48, y * 50, 'enemy');
+        enemies.anchor.setTo(0.5, 0.5);;
+        enemies.animations.add('walk');
+        enemies.animations.play('walk', 15, true);
+      }
+    }
+
+    enemies.x = 100;
+    enemies.y = 50;
+
+    //  All this does is basically start the invaders moving. Notice we're moving the Group they belong to, rather than the invaders directly.
+    var tween = game.add.tween(enemies).to( { x: 200 }, 200, Phaser.Easing.Linear.None, true, 0, 100, true);
+
+    //  When the tween completes it calls descend, before looping again
+    tween.onComplete.add(descend, this);
+}
+
+      //enemies
+      enemies = this.game.add.sprite(400, this.game.world.height - 160, 'enemy');
+      this.game.physics.arcade.enable(enemies);
+
+      enemies.body.bounce.y = 0.2;
+      enemies.body.gravity.y = 300;
+      enemies.body.collideWorldBounds = true;
+
+    },
     create: function() {
 
       //start Physics
@@ -43,15 +76,19 @@
 
       this.game.camera.follow(ninja);
 
+      createEnemies();
+
       //controls ninja with keyboard
       cursors = this.game.input.keyboard.createCursorKeys();
       jump = this.game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
 
     },
 
+
     update: function() {
 
       ninja.body.velocity.x = 0;
+      bg.tilePosition.x += 2;
 
       if (cursors.left.isDown)
     {
@@ -76,18 +113,15 @@
     }
     
     //  Allow the ninja to jump if they are touching the ground.
-    if (jump.isDown && ninja.body.onFloor() && this.game.time.now > jumpTimer)
-    {
-        ninja.body.velocity.y = -250;
-    }
-
-    if (cursors.up.isDown || jump.isDown && ninja.body.touching.down)
+    if (jump.isDown && ninja.body.touching.down)
     {
         ninja.body.velocity.y = -250;
     }
 
      //  Collide the player and the stars with the platforms
     this.game.physics.arcade.collide(ninja, platforms);
+    this.game.physics.arcade.collide(enemies, platforms);
+    this.game.physics.arcade.collide(ninja, enemies);
 
     },
     clickListener: function() {

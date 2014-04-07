@@ -93,6 +93,7 @@ module.exports = Menu;
   function Play() {}
 
   var ninja;
+  var enemies;
   var jumpTimer = 0;
   var cursors;
   var jump;
@@ -131,6 +132,17 @@ module.exports = Menu;
 
       ninja.animations.add('left', [4, 5, 6, 7], 16, true);
       ninja.animations.add('right', [8, 9, 10, 11], 16, true);
+
+      //enemies
+      enemies = this.game.add.sprite(400, this.game.world.height - 160, 'enemy');
+      this.game.physics.arcade.enable(enemies);
+
+      enemies.body.bounce.y = 0.2;
+      enemies.body.gravity.y = 300;
+      enemies.body.collideWorldBounds = true;
+
+      enemies.animations.add('left', [4, 5, 6, 7], 16, true);
+      enemies.animations.add('right', [8, 9, 10, 11], 16, true);
 
       this.game.camera.follow(ninja);
 
@@ -179,6 +191,8 @@ module.exports = Menu;
 
      //  Collide the player and the stars with the platforms
     this.game.physics.arcade.collide(ninja, platforms);
+    this.game.physics.arcade.collide(enemies, platforms);
+    this.game.physics.arcade.collide(ninja, enemies);
 
     },
     clickListener: function() {
@@ -206,6 +220,7 @@ Preload.prototype = {
     this.load.image('ledge', 'assets/Walkways/Walkway 1 E.png');
     this.load.image('ground', 'assets/Walls/Wall 2 NW.png');
     this.load.spritesheet('player', 'assets/player.png', 32, 48);
+    this.load.spritesheet('enemy', 'assets/redenemy.png', 32, 48);
 
   },
   create: function() {
