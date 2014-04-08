@@ -10,39 +10,8 @@
   var platforms;
 
   Play.prototype = {
-    createEnemies: function() {
-
-    for (var y = 0; y < 4; y++)
-    {
-      for (var x = 0; x < 10; x++)
-      {
-        var enemies = enemies.create(x * 48, y * 50, 'enemy');
-        enemies.anchor.setTo(0.5, 0.5);;
-        enemies.animations.add('walk');
-        enemies.animations.play('walk', 15, true);
-      }
-    }
-
-    enemies.x = 100;
-    enemies.y = 50;
-
-    //  All this does is basically start the invaders moving. Notice we're moving the Group they belong to, rather than the invaders directly.
-    var tween = game.add.tween(enemies).to( { x: 200 }, 200, Phaser.Easing.Linear.None, true, 0, 100, true);
-
-    //  When the tween completes it calls descend, before looping again
-    tween.onComplete.add(descend, this);
-}
-
-      //enemies
-      enemies = this.game.add.sprite(400, this.game.world.height - 160, 'enemy');
-      this.game.physics.arcade.enable(enemies);
-
-      enemies.body.bounce.y = 0.2;
-      enemies.body.gravity.y = 300;
-      enemies.body.collideWorldBounds = true;
-
-    },
-    create: function() {
+  
+  create: function() {
 
       //start Physics
       this.game.physics.startSystem(Phaser.Physics.ARCADE);
@@ -76,11 +45,10 @@
 
       this.game.camera.follow(ninja);
 
-      createEnemies();
+    //  createEnemies();
 
       //controls ninja with keyboard
       cursors = this.game.input.keyboard.createCursorKeys();
-      jump = this.game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
 
     },
 
@@ -113,7 +81,7 @@
     }
     
     //  Allow the ninja to jump if they are touching the ground.
-    if (jump.isDown && ninja.body.touching.down)
+    if (cursors.up.isDown && ninja.body.touching.down)
     {
         ninja.body.velocity.y = -250;
     }

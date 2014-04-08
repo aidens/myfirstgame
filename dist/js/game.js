@@ -101,7 +101,8 @@ module.exports = Menu;
   var platforms;
 
   Play.prototype = {
-    create: function() {
+  
+  create: function() {
 
       //start Physics
       this.game.physics.startSystem(Phaser.Physics.ARCADE);
@@ -133,28 +134,20 @@ module.exports = Menu;
       ninja.animations.add('left', [4, 5, 6, 7], 16, true);
       ninja.animations.add('right', [8, 9, 10, 11], 16, true);
 
-      //enemies
-      enemies = this.game.add.sprite(400, this.game.world.height - 160, 'enemy');
-      this.game.physics.arcade.enable(enemies);
-
-      enemies.body.bounce.y = 0.2;
-      enemies.body.gravity.y = 300;
-      enemies.body.collideWorldBounds = true;
-
-      enemies.animations.add('left', [4, 5, 6, 7], 16, true);
-      enemies.animations.add('right', [8, 9, 10, 11], 16, true);
-
       this.game.camera.follow(ninja);
+
+    //  createEnemies();
 
       //controls ninja with keyboard
       cursors = this.game.input.keyboard.createCursorKeys();
-      jump = this.game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
 
     },
+
 
     update: function() {
 
       ninja.body.velocity.x = 0;
+      bg.tilePosition.x += 2;
 
       if (cursors.left.isDown)
     {
@@ -179,12 +172,7 @@ module.exports = Menu;
     }
     
     //  Allow the ninja to jump if they are touching the ground.
-    if (jump.isDown && ninja.body.onFloor() && this.game.time.now > jumpTimer)
-    {
-        ninja.body.velocity.y = -250;
-    }
-
-    if (cursors.up.isDown || jump.isDown && ninja.body.touching.down)
+    if (cursors.up.isDown && ninja.body.touching.down)
     {
         ninja.body.velocity.y = -250;
     }
