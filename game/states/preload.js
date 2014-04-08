@@ -14,8 +14,10 @@ Preload.prototype = {
     this.load.setPreloadSprite(this.asset);
     this.load.image('ninjae', 'assets/gametitle.png');
     this.load.image('bg', 'assets/bg.png');
-    this.load.image('ledge', 'assets/Walkways/Walkway 1 E.png');
-    this.load.image('ground', 'assets/Walls/Wall 2 NW.png');
+    this.load.image('ledge', 'assets/Walkways/plat-left.png');
+    this.load.image('ledge2', 'assets/Walkways/plat-right.png');
+    this.load.image('ground', 'assets/Walls/Wall 1 NW.png');
+    this.load.image('ground2', 'assets/Walls/Wall 1 NE.png');
     this.load.spritesheet('player', 'assets/player.png', 32, 48);
     this.load.spritesheet('enemy', 'assets/redenemy.png', 32, 48);
 

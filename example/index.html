@@ -1,0 +1,83 @@
+<!doctype html>
+<html>
+	<head>
+    		<script src="phaser.min.js"></script>
+    		<style>
+    			body{margin:0}
+    		</style>
+    		<script type="text/javascript">
+			window.onload = function() {
+				// here we define a new 640x480 game, with three core functions:
+				// onPreload to be executed when the game preloads
+				// onCreate to be executed once the game is firstly created
+				// onUpdate to be called every time the game us updated
+				var game = new Phaser.Game(640,480,Phaser.AUTO,"",{preload:onPreload, create:onCreate, update:onUpdate});
+
+				// some other variables, we'll se later their meaning and how to use them
+				var map;
+				var tileset;
+				var layer;
+				var player;
+				var cursors;
+				
+				// THE GAME IS PRELOADING
+				function onPreload() {
+					// importing "level.json" file to load the level into "level" instance.
+					// this is the file I created and exported with Tiled
+					game.load.tilemap("level", "level.json", null, Phaser.Tilemap.TILED_JSON);
+					// these are the tiles used in the levels, I am loading "tiles.png" file and I also
+					// need to specify tile size (32x32) and the instance ("level").
+					// I found tiles file must have at least two tiles horizontally and vertically,
+					// or collisions won't work
+					game.load.tileset("tiles", "tiles.png", 32, 32);
+					// the hero of the game is loaded as an image, here is how I load hero.png and
+					// assign it to "hero" instance
+					game.load.image("hero", "hero.png");
+				}
+				
+				// THE GAME HAS BEEN CREATED
+				function onCreate() {
+					// adding the "level" tilemap created at line 27 to the game
+					map = game.add.tilemap("level");
+					// adding the "tiles" tileset created at line 30 to the game
+	                    tileset = game.add.tileset("tiles");
+	                    // this is the way we tell the script every tile in our engine needs to be checked
+	                    // for collision. This way all tiles are solid
+	                    tileset.setCollisionRange(0, tileset.total-1, true, true, true, true);
+	                    // now we need to create a game layer, and assign it a tile set and a map
+					layer = game.add.tilemapLayer(0, 0, 640, 480, tileset, map, 0);
+					// finally we create the player placing "hero" instance at x=32, y=416
+					player = game.add.sprite(32, 416, "hero");
+	                   	// this is the gravity applied to the player
+					player.body.gravity.y = 8;
+					// the fastest way to create game controls is "createCursorKeys" method
+					// which automatically assigns up, down, left and right movement to
+					// arrow keys
+	                    cursors = game.input.keyboard.createCursorKeys();
+				}
+				
+				// THE GAME IS GOING TO BE UPDATED
+				function onUpdate() {
+					// we are looking for collisions between the hero and the tiles
+					game.physics.collide(player, layer);
+					// setting player horizontal velocity to zero
+					player.body.velocity.x = 0;
+					// are we moving left?
+					if (cursors.left.isDown){
+	        				player.body.velocity.x = -150;
+	        			}
+	        			// are we moving right?
+					if (cursors.right.isDown){
+	        				player.body.velocity.x = 150;
+	        			}
+					// are we jumping? 
+					if (cursors.up.isDown && player.body.touching.down){
+	        				player.body.velocity.y = -250;
+	     			}
+	    			}
+	    		};
+		</script>
+    </head>
+    <body>
+    </body>
+</html>
